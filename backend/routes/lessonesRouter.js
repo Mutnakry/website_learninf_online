@@ -28,7 +28,9 @@ const upload = multer({ storage: storage });
 
 router.get('/', getCouses);
 // router.get('/:id', getLessoneById);
-router.get('/:modaleId/:courseId', getLessoneById);
+// router.get('/:courseId/:modaleId/:submodaleId', getLessoneById);
+router.get('/:courseId/:modaleId/:submodaleId', getLessoneById);
+
 router.post('/', upload.fields([{ name: 'image' }, { name: 'video' }]), createLessones);  // Handle file upload for both image and video
 
 module.exports = router;

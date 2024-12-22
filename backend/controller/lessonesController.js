@@ -49,25 +49,52 @@ const getCouses = async (req, res) => {
 
 
 
+// const getLessoneById = async (req, res) => {
+//     const { modaleId, courseId } = req.params; 
+
+//     try {
+//         const result = await db.query(
+//             'SELECT * FROM lessones as l inner join modales as m ON m.mod_id = l.modale_id inner join courses as c On c.cous_id = l.courses_id where l.modale_id=$1 and l.courses_id= $2',
+//             [modaleId, courseId]
+//         );
+
+//         if (result.rows.length === 0) {
+//             return res.status(404).json({ message: 'Course not found' });
+//         }
+
+//         res.json(result.rows);
+//     } catch (err) {
+//         console.error('Error fetching course by ID:', err);
+//         res.status(500).json({ error: 'Server error: ' + err.message });
+//     }
+// };
+
+
 const getLessoneById = async (req, res) => {
-    const { modaleId, courseId } = req.params; 
+    const {courseId, modaleId, submodaleId } = req.params;;
 
     try {
         const result = await db.query(
-            'SELECT * FROM lessones as l inner join modales as m ON m.mod_id = l.modale_id inner join courses as c On c.cous_id = l.courses_id where l.modale_id=$1 and l.courses_id= $2',
-            [modaleId, courseId]
+            `SELECT * 
+             FROM lessones AS l 
+             INNER JOIN modales AS m ON m.mod_id = l.modale_id 
+             INNER JOIN courses AS c ON c.cous_id = l.courses_id 
+             INNER JOIN sub_modale AS sub ON sub.sub_id = l.submodale_id  
+             WHERE l.courses_id = $1 AND l.modale_id= $2 AND l.submodale_id= $3`,
+            [courseId,modaleId, submodaleId]
         );
 
         if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Course not found' });
+            return res.status(404).json({ message: 'Lesson not found' });
         }
 
         res.json(result.rows);
     } catch (err) {
-        console.error('Error fetching course by ID:', err);
+        console.error('Error fetching lesson by ID:', err);
         res.status(500).json({ error: 'Server error: ' + err.message });
     }
 };
+
 
 
 const createLessones = async (req, res) => {

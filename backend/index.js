@@ -21,6 +21,9 @@ app.use('/api/couses', cousesRouter);
 // modaleCousesRouter
 const modaleCousesRouter = require('./routes/modaleCousesRouter.js');
 app.use('/api/modale', modaleCousesRouter);
+
+const submodaleCousesRouter = require('./routes/submodaleCousesRouter.js');
+app.use('/api/submodale', submodaleCousesRouter);
 // lessonesRouter
 const lessonesRouter = require('./routes/lessonesRouter.js');
 app.use('/api/lessone', lessonesRouter);
