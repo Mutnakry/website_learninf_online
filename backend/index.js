@@ -28,6 +28,13 @@ app.use('/api/submodale', submodaleCousesRouter);
 const lessonesRouter = require('./routes/lessonesRouter.js');
 app.use('/api/lessone', lessonesRouter);
 
+// categoryRouter
+const categoryRouter = require('./routes/categoryRouter.js');
+app.use('/api/category', categoryRouter);
+// lessonesRouter
+const detailCategoryRouter = require('./routes/detailCategoryRouter.js');
+app.use('/api/detailcategory', detailCategoryRouter);
+
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 
