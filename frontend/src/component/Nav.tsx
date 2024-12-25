@@ -1,153 +1,164 @@
-import { useState, useRef, useEffect } from "react";
-import { FaCamera, FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface Category {
-  id: number;
-  name: string;
-  description: string;
+  cat_id: number;
+  cat_names: string;
 }
 
-interface Product {
-  id: number;
-  name: string;
+interface Course {
+  cous_id: number;
+  cous_name: string;
+  category_id: number; // Reference to Category
+  detail_category_id: number; // Reference to DetailCategory
+}
+
+interface DetailCategory {
+  de_id: number;
+  de_name: string;
+  category_id: number; // Reference to Category
+  cat_names: string;
 }
 
 function Navbar() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [dropdownOpenCategory, setDropdownOpenCategory] = useState(false);
+  const [openCategoryId, setOpenCategoryId] = useState<number | null>(null); // Track which category is open
+  const [openDetailCategoryId, setOpenDetailCategoryId] = useState<number | null>(null); // Track which detail category is open
+  const [openCourseId, setOpenCourseId] = useState<number | null>(null);
+  const [detailCategories, setDetailCategories] = useState<DetailCategory[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
 
-  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
-
-  // Close dropdown on outside click
   useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
+    const fetchData = async () => {
+      try {
+        const responseCategory = await axios.get<Category[]>("http://localhost:5000/api/category");
+        const responseDetailCategory = await axios.get<DetailCategory[]>("http://localhost:5000/api/detailcategory");
+        const responseCourses = await axios.get<Course[]>("http://localhost:5000/api/couses");
+
+        setCategories(responseCategory.data);
+        setDetailCategories(responseDetailCategory.data);
+        setCourses(responseCourses.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
       }
     };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
+
+    fetchData();
   }, []);
 
-  const category: Category[] = [
-    { id: 1, name: "Electronics", description: "Gadgets and devices" },
-    { id: 2, name: "Groceries", description: "Food and daily essentials" },
-    { id: 3, name: "Clothing", description: "Apparel and accessories" },
-  ];
+  const handleMouseEnterCategory = (cat_id: number) => {
+    setDropdownOpenCategory(true);
+    setOpenCategoryId(cat_id);  // Set the category whose detail categories should be displayed
+  };
 
-  const product: Product[] = [
-    { id: 1, name: "ABC" },
-    { id: 2, name: "Gasber" },
-    { id: 3, name: "Cambodia" },
-  ];
+  const handleMouseLeaveCategory = () => {
+    // Only hide category if the mouse leaves the entire category area, not just the category button
+    setDropdownOpenCategory(false);
+    setOpenCategoryId(null);
+    setOpenDetailCategoryId(null);
+    setOpenCourseId(null);
+  };
 
-  const filteredProducts = product.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleMouseEnterDetailCategory = (de_id: number) => {
+    setOpenDetailCategoryId(de_id); // Set the detail category whose courses should be displayed
+  };
+
+  const handleMouseLeaveDetailCategory = () => {
+    setOpenDetailCategoryId(null);
+    setOpenCourseId(null);
+  };
+
+  const handleMouseEnterCourse = (cous_id: number) => {
+    setOpenCourseId(cous_id);
+  };
+
+  const handleMouseLeaveCourse = () => {
+    setOpenCourseId(null);
+  };
 
   return (
     <div>
-      <div className="bg-white dark:bg-gray-900 w-full shadow fixed top-0 z-20">
-        <nav className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
-          {/* Logo */}
-          <a href="/" className="flex items-center space-x-3">
-            <img src="https://www.khmer24.com/icon/khmer24.png" className="h-10" alt="Khmer24 Logo" />
-            <img className="h-6" src="https://www.khmer24.com/icon/km-40x40.png" alt="Khmer Icon" />
-          </a>
-
-          {/* Search Bar and User Options */}
-          <div className="hidden lg:flex items-center flex-1 space-x-4">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                className="border px-4 py-2 w-full outline-none bg-gray-50 focus:border-blue-500"
-                placeholder="តើអ្នកកំពុងស្វែរកផលិតផលអ្វី?"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FaSearch className="absolute right-3 top-3 text-gray-500" />
-              {searchTerm && (
-                <div className="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                  {filteredProducts.length > 0 ? (
-                    <ul className="py-2 text-sm text-gray-700">
-                      {filteredProducts.map((item) => (
-                        <li key={item.id} className="hover:bg-gray-100 px-4 py-2 cursor-pointer">
-                          {item.name}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="py-2 px-4 text-gray-500 text-sm">មិនមានផលិតផលទេ!</div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <a href="/login" className="text-blue-800">
-                ចូលគណនី
-              </a>
-              <span className="text-gray-400">ឬ</span>
-              <a href="/register" className="text-blue-800">
-                ចុះឈ្មោះ
-              </a>
-              <button className="flex px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg items-center space-x-2">
-                <FaCamera />
-                <span>ដាក់លក់</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Hamburger Menu (Mobile) */}
-          <button className="lg:hidden text-2xl" onClick={toggleMenu}>
-            {menuOpen ? <FaTimes /> : <FaBars />}
+      <div className="hidden md:flex items-start flex-1 px-4 space-x-8">
+        <div
+          className="relative "
+          onMouseEnter={() => handleMouseEnterCategory(-1)} // Trigger category dropdown
+          onMouseLeave={handleMouseLeaveCategory}
+        >
+          <button className="text-white w-full p-2 hover:text-gray-400 transition-colors duration-300">
+            ជំនាញ
           </button>
-        </nav>
+          {dropdownOpenCategory && (
+            <ul className="absolute mt-2 left-0 bg-gray-50  border shadow-lg w-[350px] -translate-x-20">
+              {categories.map((category) => (
+                <div key={category.cat_id}>
+                  <li
+                    className="group relative px-4 py-2 w-full hover:bg-blue-300 -translate-y-2"
+                    onMouseEnter={() => handleMouseEnterCategory(category.cat_id)}
+                    onMouseLeave={handleMouseLeaveCategory}
+                  >
+                    <div className="font-semibold">{category.cat_names}</div>
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="lg:hidden bg-white shadow-md">
-            <ul className="space-y-2 p-4">
-              <li>
-                <button onClick={toggleDropdown} className="w-full text-left px-4 py-2 bg-gray-100 rounded">
-                  ផលិតផលទាំងអស់
-                </button>
-                {dropdownOpen && (
-                  <ul className="mt-2 bg-gray-50 border rounded">
-                    {category.map((item) => (
-                      <li key={item.id} className="px-4 py-2 hover:bg-gray-100">
-                        <div className="font-semibold">{item.name}</div>
-                        <div className="text-xs text-gray-500">{item.description}</div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-              <li>
-                <a href="/login" className="block px-4 py-2 text-blue-800">
-                  ចូលគណនី
-                </a>
-              </li>
-              <li>
-                <a href="/register" className="block px-4 py-2 text-blue-800">
-                  ចុះឈ្មោះ
-                </a>
-              </li>
-              <li>
-                <button className="flex w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg items-center space-x-2">
-                  <FaCamera />
-                  <span>ដាក់លក់</span>
-                </button>
-              </li>
+                    {/* Show detail categories under this category */}
+                    {openCategoryId === category.cat_id && (
+                      <ul className="absolute left-full top-0 bg-gray-50 border shadow-lg w-[350px]">
+                        {detailCategories
+                          .filter((detail) => detail.category_id === category.cat_id) // Filter by category_id
+                          .map((detail) => (
+                            <Link
+                              key={detail.de_id}
+                              to={`/${detail.de_name}/${detail.category_id}/${category.cat_names}/${detail.de_id}`}
+                              className="relative group px-4 py-2 hover:bg-blue-300 flex"
+                              onMouseEnter={() => handleMouseEnterDetailCategory(detail.de_id)}
+                              onMouseLeave={handleMouseLeaveDetailCategory}
+                            >
+                              {detail.de_name}
+                              {openDetailCategoryId === detail.de_id && (
+                                <ul className="absolute left-full top-0 bg-gray-100 border shadow-lg w-[250px]">
+
+                                  {courses
+                                    .filter((course) => course.detail_category_id === detail.de_id)
+                                    .map((course) => (
+                                      <Link
+                                        to={`/modales/${course.cous_id}/course`}
+                                        key={course.cous_id}
+                                        className="px-4 py-2 hover:bg-blue-300 flex"
+                                        onMouseEnter={() => handleMouseEnterCourse(course.cous_id)}
+                                        onMouseLeave={handleMouseLeaveCourse}
+                                      >
+                                        {course.cous_name}
+                                      </Link>
+                                    ))}
+
+                                </ul>
+                              )}
+                            </Link>
+                          ))}
+                      </ul>
+                    )}
+                  </li>
+                </div>
+              ))}
             </ul>
-          </div>
-        )}
+          )}
+        </div>
       </div>
+
     </div>
   );
 }
 
 export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+

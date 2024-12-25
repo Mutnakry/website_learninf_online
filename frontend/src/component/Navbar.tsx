@@ -11,6 +11,7 @@ import Register from "./modal/Register"
 import { FaRegUserCircle } from "react-icons/fa";
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import Nav from "./Nav";
 
 interface Course {
   cous_id: number;
@@ -23,6 +24,7 @@ interface Course {
   exam: string;
   course_type: 'free' | 'premium';
 }
+
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -62,6 +64,8 @@ function Navbar() {
 
 
 
+
+
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -80,6 +84,7 @@ function Navbar() {
   }, []);
 
 
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem("user_role");
@@ -135,10 +140,11 @@ function Navbar() {
     item.cous_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
   return (
     <div>
       <div className="bg-blue-700 dark:bg-gray-900 w-full shadow fixed top-0 z-20">
-        <nav className="max-w-screen-xl mx-auto py-1 flex justify-between items-center">
+        <nav className="max-w-screen-xl mx-auto py-1 space-x-8 px-4 flex justify-between items-center">
           {/* Logo */}
           <a href="/" className="flex items-center md:space-x-3 text-center">
             <h3 className=" py-2 text-sm lg:text-gray-300 text-white flex items-center lg:text-xl">
@@ -154,8 +160,14 @@ function Navbar() {
             />
           </a>
 
+
+
           {/* Search Bar and User Options */}
-          <div className="hidden lg:flex items-center flex-1 space-x-4 px-4">
+          <div className="hidden md:flex items-center flex-1 px-4 space-x-8">
+
+            <div><Nav /></div>
+
+
             <div className="relative flex-1">
               <input
                 type="text"
@@ -201,16 +213,6 @@ function Navbar() {
                 </div>
               )}
             </div>
-
-            <div className="flex items-center space-x-2">
-              <a href="/Courses" className="text-gray-300">
-                ថ្នាក់រៀន
-              </a>
-              <a href="/Careers" className="text-gray-300">
-                ជំនាញ
-              </a>
-            </div>
-
           </div>
           <div className="flex items-center lg:space-x-4 space-x-1">
             {userEmail ? (
@@ -241,20 +243,26 @@ function Navbar() {
               </>
             ) : (
               <>
-                <button onClick={openModalLogin} className="text-gray-300 text-xs lg:text-lg">
+                {/* <button onClick={openModalLogin} className="text-gray-300 text-sm md:text-lg">
                   ចូលគណនី
                 </button>
                 <span className="text-gray-400">ឬ</span>
-                <button onClick={openModalRegister} className="text-gray-300 text-xs lg:text-lg">
+                <button onClick={openModalRegister} className="text-gray-300 text-sm md:text-lg">
                   ចុះឈ្មោះ
-                </button>
+                </button> */}
+                <a href={'/login'} className="text-gray-300 text-sm md:text-lg">
+                  ចូលគណនី
+                </a>
+                <span className="text-gray-400">ឬ</span>
+                <a href={'/register'} className="text-gray-300 text-sm md:text-lg">
+                  ចុះឈ្មោះ
+                </a>
               </>
             )}
           </div>
 
-
           {/* Hamburger Menu (Mobile) */}
-          <button className="lg:hidden text-2xl text-white" onClick={toggleMenu}>
+          <button className="md:hidden text-2xl text-white" onClick={toggleMenu}>
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </nav>
@@ -293,13 +301,13 @@ function Navbar() {
                   </>
                 ) : (
                   <>
-                    <button onClick={openModalLogin} className="text-blue-800">
+                    <a href={'/login'} className="text-blue-800">
                       ចូលគណនី
-                    </button>
+                    </a>
                     <span className="text-gray-400">ឬ</span>
-                    <button onClick={openModalRegister} className="text-blue-800">
+                    <a href={'/register'} className="text-blue-800">
                       ចុះឈ្មោះ
-                    </button>
+                    </a>
                   </>
                 )}
               </div>

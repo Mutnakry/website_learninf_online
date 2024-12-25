@@ -127,3 +127,41 @@ body {
 .show-more-btn:hover {
   background-color: #2980b9;
 }
+
+
+/* Parent container to center the circle */
+.relative {
+  position: relative;
+}
+
+/* Circle animation */
+.circle {
+  position: absolute;
+  width: 200px; /* Adjust to control the circle's size */
+  height: 200px;
+  border-radius: 50%; /* Makes it a perfect circle */
+  animation: spin 5s linear infinite; /* Smooth, continuous rotation */
+  transform-origin: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle p {
+  position: absolute;
+  white-space: nowrap; /* Prevents wrapping */
+  transform: rotate(0deg); /* Ensures text orientation stays readable */
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Animation Keyframes */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

@@ -465,7 +465,7 @@ interface ModaleID {
     create_at?: string | null;
     update_at?: string | null;
     delete_at?: string | null;
-    description?:string | null;
+    description?: string | null;
     user_id?: number;
     user_at?: string;
     user_update?: string;
@@ -488,7 +488,16 @@ function CourseModale() {
     const [loading, setLoading] = useState<boolean>(true); // Loading state
     const [showModal, setShowModal] = useState<boolean>(false);
     const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
-    const [UserLoginType, setUserLoginType] = useState<string>("user");
+
+    const [UserLoginType, setUserLoginType] = useState<string | null>("");
+
+    useEffect(() => {
+        const storedRol = localStorage.getItem("user_role");
+
+        if (storedRol) {
+            setUserLoginType(storedRol);
+        }
+    }, []);
 
     const { id } = useParams();
 
@@ -496,6 +505,7 @@ function CourseModale() {
     const toggleDropdown = (id: number) => {
         setDropdownOpen((prev) => (prev === id ? null : id));
     };
+
 
     useEffect(() => {
         if (id) {
@@ -568,6 +578,8 @@ function CourseModale() {
         return lessonesID.filter((lesson) => lesson.modale_id === modaleId);
     };
 
+
+
     return (
         <div className='pt-24'>
             <Navbar />
@@ -634,7 +646,7 @@ function CourseModale() {
                                                 <div>
                                                     {filteredLessons(course.mod_id).map((lesson) => (
                                                         <div key={lesson.sub_id}>
-                                                            {UserLoginType === "Admin" || UserLoginType === "SuperAdmin" ? (
+                                                            {UserLoginType === "admin" || UserLoginType === "super_admin" ? (
                                                                 <Link
                                                                     key={lesson.sub_id}
                                                                     to={`/course/${course.courses_id}/modales/${lesson.modale_id}/lessone/${lesson.sub_id}`}
@@ -714,7 +726,7 @@ function CourseModale() {
                 )}
 
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 }
