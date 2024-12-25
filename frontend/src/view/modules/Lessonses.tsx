@@ -39,18 +39,21 @@ function CourseModale() {
     }, [modaleId, courseId, submodaleId]);
 
     const fetchLessonesID = async () => {
-        try {
-
-            const response = await axios.get<LessonesID[]>(`http://localhost:5000/api/lessone/${courseId}/${modaleId}/${submodaleId}`);
-            setLessonesID(response.data);
-            console.log(response.data);
-        } catch (err) {
-            console.error('Error fetching lessons:', err);
-            setError('Failed to fetch lessons.');
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        setTimeout(async () => {
+            try {
+                const response = await axios.get<LessonesID[]>(`http://localhost:5000/api/lessone/${courseId}/${modaleId}/${submodaleId}`);
+                setLessonesID(response.data);
+                console.log(response.data);
+            } catch (err) {
+                console.error('Error fetching lessons:', err);
+                setError('Failed to fetch lessons.');
+            } finally {
+                setLoading(false);
+            }
+        }, 1500); // 3000ms = 3 seconds
     };
+
 
     const downloadAsImage = async () => {
         if (codeBlockRef.current) {
@@ -84,9 +87,13 @@ function CourseModale() {
 
             <div className='max-w-screen-2xl mx-auto px-4'>
                 {loading ? (
-                    <div className='text-center py-8'>
-                        <p>Loading lessons...</p>
+                    <div className="h-screen flex justify-center items-center">
+                        <div className="flex justify-center items-center space-x-2">
+                            <div className="border-solid rounded-full animate-spin"></div>
+                            <img className='h-12' src="https://i.gifer.com/ZKZg.gif" alt="Loading" />
+                        </div>
                     </div>
+
                 ) : error ? (
                     <div className='text-center text-red-500 py-8'>
                         <p>{error}</p>

@@ -12,6 +12,7 @@ import HomePage from './page/HomePage';
 import DetailCategory from './view/Coureses/DetailCategory/DetailCategory'
 import Register from './component/Register';
 import Login from './component/Login';
+import UserLogin from './view/personal/UserLogin';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           {/* <Route path="/" element={<Nav />} /> */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/userLogin" element={<UserLogin />} />
           <Route path="/modales/:id/course" element={<CourseModale />} />
           <Route path="/course/:courseId/modales/:modaleId/lessone/:submodaleId" element={<Lessons />} />
           <Route path="/courses/premium/:courseId" element={<VideoPremium />} />

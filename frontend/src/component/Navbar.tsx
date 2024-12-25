@@ -231,7 +231,7 @@ function Navbar() {
                         <p>{userEmail}</p>
                         <br />
                         <div className="flex gap-1">
-                          <a href="/dashbord" className="text-blue-800 w-full p-2 bg-gray-400">ព័ត្នមានខ្លួន</a>
+                          <a href="/userLogin" className="text-blue-800 w-full p-2 bg-gray-400">ព័ត្នមានខ្លួន</a>
                           <button onClick={handleLogout} className="text-blue-800 w-full p-2 bg-gray-400">
                             ចាកចេញ
                           </button>
