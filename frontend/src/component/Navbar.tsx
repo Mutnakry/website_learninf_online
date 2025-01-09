@@ -1,7 +1,4 @@
 
-
-
-// src/components/Navbar.tsx
 import { useEffect, useState, useRef } from "react";
 import { FaSearch, FaBars, FaTimes, FaLaptopCode } from "react-icons/fa";
 import { GrFormNext } from "react-icons/gr";

@@ -7,8 +7,6 @@ import { MdMenuBook, MdQuestionAnswer } from "react-icons/md";
 import { SiAnswer } from "react-icons/si";
 import { useParams } from 'react-router-dom';
 
-import Text from './Text'
-
 import html2canvas from 'html2canvas';
 import { FaRegCopy, FaFileDownload } from "react-icons/fa";
 
@@ -194,6 +192,7 @@ function CourseModale() {
                                                 Save Image
                                             </span>
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -202,9 +201,7 @@ function CourseModale() {
                     </div>
                 )}
                 <hr />
-                <Text/>
             </div>
-
 
         </div>
     );
